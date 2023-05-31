@@ -1,0 +1,5 @@
+Thermaltake Tower 100 Mini Torre:120.0:50.0:10:m:0:Thermaltake
+Corsair iCUE 7000X RGB:410.0:80.0:20:T:0:Corsair
+SilverStone ML04B:108.0:45.0:5:t:0:SilverStone
+Aerocool Genesis ARGB:80.0:40.0:4:s:0:Aerocool
+Caja servidor Lanberg:100.0:40.0:9:b:0:Lanberg
