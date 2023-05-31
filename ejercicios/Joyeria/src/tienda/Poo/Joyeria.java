@@ -30,7 +30,7 @@ public class Joyeria {
             nuevo=new Joya(precio,peso,nombre,tipo,material);
             this.Joyeria.put(nombre,nuevo);
         }else{
-            System.out.println("");
+            throw new JoyeriaException("No se puede añadir una joya ya existente");
         }
     }
     
