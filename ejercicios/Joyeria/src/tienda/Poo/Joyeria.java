@@ -31,10 +31,10 @@ public class Joyeria {
         Joya busqueda,nuevo;
         busqueda=this.encontrarJoya(nombre);
         if(busqueda==null){
+            throw new JoyeriaException("No se puede añadir una joya ya existente");
+        }else{
             nuevo=new Joya(precio,peso,nombre,tipo,material);
             this.Joyeria.put(nombre,nuevo);
-        }else{
-            throw new JoyeriaException("No se puede añadir una joya ya existente");
         }
     }
     
