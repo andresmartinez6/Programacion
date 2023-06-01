@@ -32,8 +32,8 @@ public class Tienda {
             res += "No tenemos torres disponibles.";
         } else {
             res += "Nuestras torres disponibles son:\n";
-            for (Producto producto : this.almacen.values()) {
-                res += producto.toString();
+            for (Producto prod : this.almacen.values()) {
+                res += prod.toString();
             }
         }
         return res;

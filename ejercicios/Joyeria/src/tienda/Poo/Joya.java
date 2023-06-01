@@ -1,5 +1,6 @@
 package tienda.Poo;
 
+import java.util.HashMap;
 
 public class Joya {
     
@@ -8,6 +9,16 @@ public class Joya {
     private String nombre,tipo;
     private char material;
     private static int contador=1;
+    
+    private static final HashMap<Character,String>materialesCompletos=new HashMap<>(){
+        {
+            put('o',"ORO");
+            put('p',"PLATA");
+            put('P',"PLATINO");
+            put('i',"IRIDIO");
+            put('r',"RODIO");
+        }
+    };
     
     public Joya(double precio, double peso, String nombre, String tipo, char material) {
         this.precio = precio;
@@ -85,30 +96,26 @@ public class Joya {
              "NOMBRE:"+this.nombre+"\n"+
              "PRECIO:"+this.precio+"\n"+
              "PESO:"+this.peso+"\n"+
-             "TIPO:"+this.tipo+"\n";
-        switch(this.material){
-            case 'o':
-                res+="Oro\n";
-                break;
-            case 'p':
-                res+="plata\n";
-                break;
-            case 'P':
-                res+="Platino\n";
-                break;
-            case 'i':
-                res+="Iridio\n";
-                break;
-            case 'r':
-                res+="Rodio\n";
-                break;
-        }
-        
+             "TIPO:"+this.tipo+"\n"+
+             "MATERIAL:"+this.materialesCompletos.get(this.material);
         res+="##############################\n";
         
         return res;
     }
     
+    
+    public void subirPrecio(double cant){
+        if(cant>0){
+            this.precio+=cant;
+        }else{
+            throw new JoyeriaException("ERROR,no se puede subir precio con cantidades"
+                    + "negativas");
+        }
+    }
+    
+    public static String getMaterialesCompletos(char e_material){
+        return materialesCompletos.get(e_material);
+    }
         
 }
 
