@@ -1,4 +1,4 @@
-package Excepciones;
+package tienda.poo;
 
 import java.io.*;
 import java.util.*;

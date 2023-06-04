@@ -6,14 +6,14 @@ import java.util.HashMap;
 public class Producto {
     
     
-    private int orden,stock,unidades_vendidas=0;
-    private String nombre,fabricante,nombre_juegos;
+    private int orden,stock,unidades_vendidas;
+    private String nombre_prod,fabricante_prod;
     private double precio,coste_unitario;
     private char categoria;
     
     private static int contador=1;
     
-    private HashMap<Character,String>juegosCompletos=new HashMap<>(){
+    private HashMap<Character,String>categoriasCompletas=new HashMap<>(){
         {
             put('A',"Arcade");
             put('D',"Deportivos");
@@ -23,11 +23,20 @@ public class Producto {
         }
     };
 
-    public Producto(int stock, String nombre, String fabricante, String nombre_juegos, double precio, double coste_unitario, char categoria) {
-        
-        
-        if (nombre.equals("")) {
+    public Producto(int orden, int stock, int unidades_vendidas, String nombre_prod, 
+            String fabricante_prod, double precio, double coste_unitario, char categoria) {
+         
+        if (stock < 0) {
+            throw new TiendaException("Fallo al construir, el stock tiene que ser mayor que 0.");
+        }
+        if (unidades_vendidas < 0) {
+            throw new TiendaException("Fallo al construir, las unidades vendidas no pueden ser negativas.");
+        }
+        if (nombre_prod.equals("")) {
             throw new TiendaException("Fallo al construir, nombre vacío.");
+        }
+        if (fabricante_prod.equals("")) {
+            throw new TiendaException("Fallo al construir, el nombre del fabricante no puede estar vacio.");
         }
         if (precio < 0 || precio < coste_unitario) {
             throw new TiendaException("Fallo al construir, precio del producto incorrecto, tiene que ser mayor que 0 y mayor que el coste unitario.");
@@ -35,43 +44,35 @@ public class Producto {
         if (coste_unitario < 0) {
             throw new TiendaException("Fallo al construir, coste unitario tiene que ser mayor que 0.");
         }
-        if (unidades_vendidas < 0) {
-            throw new TiendaException("Fallo al construir, las unidades vendidas no pueden ser negativas.");
-        }
-        if (stock < 0) {
-            throw new TiendaException("Fallo al construir, el stock tiene que ser mayor que 0.");
-        }
-        if (!(juegosCompletos.containsKey(categoria))) {
+    
+        if (!(categoriasCompletas.containsKey(categoria))) {
             throw new TiendaException("Fallo al construir, la categoria no es correcta.");
-        }
-        if (fabricante.equals("")) {
-            throw new TiendaException("Fallo al construir, el nombre del fabricante no puede estar vacio.");
         }
         
         this.stock = stock;
-        this.nombre = nombre;
-        this.fabricante = fabricante;
-        this.nombre_juegos = nombre_juegos;
+        this.unidades_vendidas = unidades_vendidas;
+        this.nombre_prod = nombre_prod;
+        this.fabricante_prod = fabricante_prod;
         this.precio = precio;
         this.coste_unitario = coste_unitario;
         this.categoria = categoria;
-        this.orden=this.contador;
-        this.contador++;
-    }
-
-    //Constructor copias
-    public Producto(Producto prd){
-        this.stock = prd.stock;
-        this.nombre = prd.nombre;
-        this.fabricante = prd.fabricante;
-        this.nombre_juegos = prd.nombre_juegos;
-        this.precio = prd.precio;
-        this.coste_unitario = prd.coste_unitario;
-        this.categoria = prd.categoria;
-        this.orden=this.contador;
+        this.orden = this.contador;
         this.contador++;
     }
     
+    //constructor de copias
+    public Producto(Producto prd){
+        this.stock = prd.stock;
+        this.unidades_vendidas = prd.unidades_vendidas;
+        this.nombre_prod = prd.nombre_prod;
+        this.fabricante_prod = prd.fabricante_prod;
+        this.precio = prd.precio;
+        this.coste_unitario = prd.coste_unitario;
+        this.categoria = prd.categoria;
+        this.orden = this.contador;
+        this.contador++;
+    }
+
     public int getOrden() {
         return orden;
     }
@@ -84,16 +85,12 @@ public class Producto {
         return unidades_vendidas;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getNombre_prod() {
+        return nombre_prod;
     }
 
-    public String getFabricante() {
-        return fabricante;
-    }
-
-    public String getNombre_juegos() {
-        return nombre_juegos;
+    public String getFabricante_prod() {
+        return fabricante_prod;
     }
 
     public double getPrecio() {
@@ -108,14 +105,10 @@ public class Producto {
         return categoria;
     }
     
-    public static String getTipoCompleto(char tipo) {
-        return tiposCompletos.get(tipo);
+    public double beneficioObtenido(){
+        return (this.precio-this.coste_unitario)*this.unidades_vendidas;
     }
     
-    public double getBeneficio() {
-        return (this.precio - this.coste_unitario) * this.unidades_vendidas;
-    }
-
     public void subirPrecio(double e_cantidad) {
         if (e_cantidad > 0) {
             this.precio += e_cantidad;
@@ -126,7 +119,8 @@ public class Producto {
 
     public void bajarPrecio(double e_cantidad) {
         if (this.precio - e_cantidad < this.coste_unitario) {
-            throw new TiendaException("No se puede bajar el precio por debajo del coste de producción.");
+            throw new TiendaException("No se puede bajar el precio si el nuevo "
+                    + "precio es inferior al coste de producción.");
         } else {
             this.precio -= e_cantidad;
         }
@@ -134,7 +128,7 @@ public class Producto {
 
     public void venderProducto(int e_cantidad) {
         if (e_cantidad > this.stock) {
-            throw new TiendaException("No hay suficiente stock para vender.");
+            throw new TiendaException("No quedan unidades para vender.");
         } else {
             this.stock -= e_cantidad;
             this.unidades_vendidas += e_cantidad;
@@ -143,10 +137,10 @@ public class Producto {
 
     //Método modificar categoría
     public void modificarCategoria(char e_categoria) {
-        if (this.juegosCompletos.containsKey(e_categoria)) {
+        if (this.categoriasCompletas.containsKey(e_categoria)) {
             this.categoria = e_categoria;
         } else {
-            throw new TiendaException("Tipo incorrecto");
+            throw new TiendaException("La categoria que has introducido no existe");
         }
     }
 
@@ -154,7 +148,7 @@ public class Producto {
         if (e_stock > 0) {
             this.stock += e_stock;
         } else {
-            throw new TiendaException("Por favor, introduzca cantidad mayor que 0");
+            throw new TiendaException("ERROR,introduzca una cantidad mayor que 0");
         }
 
     }
@@ -163,29 +157,27 @@ public class Producto {
         if (e_coste <= 0) {
             throw new TiendaException("El coste unitario debe ser mayor que 0.");
         } else if (e_coste >= this.precio) {
-            throw new TiendaException("El coste unitario no puede ser mayor o igual que el precio de venta.");
+            throw new TiendaException("El coste unitario no puede ser mayor o "
+                    + "igual que el precio que hay de venta.");
         } else {
             this.coste_unitario = e_coste;
         }
     }
-
-
+    
     @Override
     public String toString(){
         String res="";
         
             res+="=======================================================\n"
-                    + "\n                RESUMEN DE COMPRA                 "
-                    + "\nNombre:"+this.nombre+"."
-                    + "\nNombre producto:"+this.juegosCompletos.get(nombre_juegos)+"."
-                    + "\nCategoria:"+this.categoria+"."
-                    + "\nCod_cliente:"+this.orden+"."
-                    + "\n=======================================================";
+                   +"\n                RESUMEN DE COMPRA                 "
+                   +"\nNombre:"+this.nombre_prod+"."
+                   +"\nNombre producto:"+this.categoriasCompletas.get(this.categoria)+"."
+                   +"\nCategoria:"+this.categoria+"."
+                   +"\nCod_cliente:"+this.orden+"."
+                   +"\n=======================================================";
         
         return res;
     }
-    
-    
     
     
 }
