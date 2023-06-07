@@ -1,5 +1,8 @@
 package gestion;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,13 +15,11 @@ public class TiendaRopaOnline {
     
     //Apartado a)
     //Atributo HashMap
-    private String nombreTienda;
     private HashMap<String,Ropa>almacen;
     
     //Apartado b)
     //inicializamos el HashMap a vacio
-    public TiendaRopaOnline(String nombre){
-        this.nombreTienda=nombre;
+    public TiendaRopaOnline(){
         this.almacen=new HashMap<>();
     }
    
@@ -58,7 +59,7 @@ public class TiendaRopaOnline {
         HashMap<String,Double>r=new HashMap<>();
         for (Ropa rp : this.almacen.values()) {
             double contador=r.getOrDefault(rp.getMarca(),0.0);
-            r.put(rp.getMarca(), contador++);
+            r.put(rp.getMarca(), contador+1);
         }
         return r;
     }
@@ -126,6 +127,44 @@ public class TiendaRopaOnline {
     
     //Apartado i)
     public void cargarRopas(String fichero){
+        try{
+            FileReader fr = new FileReader (fichero);
+            BufferedReader br = new BufferedReader (fr);
+
+            String linea, nombre, marca;
+            double precio;
+            char temporada;
+            String [] partes;
+            Ropa nueva;
+
+            while ((linea = br.readLine()) != null) {
+                partes = linea.split("");
+                nombre = partes [0];
+
+                if (!this.almacen.containsKey (nombre)) {
+                    
+                    marca = partes[1];
+                    precio = Double.parseDouble (partes [2]);
+                    temporada = partes [3].charAt(0);
+
+                    nueva = new Ropa(nombre, marca, precio,temporada);
+                    this.almacen.put (nombre, nueva);
+                }
+
+            }
+            
+            br.close (); 
+            fr.close();
+            
+            }catch (ArrayIndexOutOfBoundsException aiobe) {
+                throw new RopaException("Faltan datos en el fichero");
+            }catch (NumberFormatException nfe) {
+                throw new RopaException("Tipo de dato incorrecto");
+            } catch(FileNotFoundException fnf) {
+                throw new RopaException ("No existe fichero de Ropa");
+            }catch(IOException ioe){
+                throw new RopaException("ERROR de lectura en el disco");
+            }
         
     }
     

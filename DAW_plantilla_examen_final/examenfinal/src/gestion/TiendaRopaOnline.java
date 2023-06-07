@@ -6,7 +6,6 @@ import java.util.HashMap;
 public class TiendaRopaOnline {
     
     //Apartado a)
-    private String nombreTienda;
     //Atributo HashMap
     private HashMap<String,Ropa>Tienda;
     
@@ -14,7 +13,6 @@ public class TiendaRopaOnline {
 
     public TiendaRopaOnline(String nombreTienda) {
         this.Tienda = new HashMap<>();
-        this.nombreTienda=nombreTienda;
     }
     
     

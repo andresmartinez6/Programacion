@@ -1,5 +1,6 @@
 package principal;
 
+import gestion.RopaException;
 import gestion.TiendaRopaOnline;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -80,14 +81,14 @@ public class PrincipalTiendaRopa {
                     default:
                         System.out.println("Opcion erronea¡¡¡");
                 }
-            } catch (InputMismatchException ime) {
+            }catch (InputMismatchException ime) {
                 System.out.println("======================================================");
                 System.out.println("Formato de entrada de teclado incorrecto");
                 System.out.println("======================================================");
                 teclado.nextLine();
-            } // catch (RopaExcepcion be){
-            //  System.out.println(be.getMessage());
-            // }
+            }catch (RopaException be){
+              System.out.println(be.getMessage());
+            }
         } while (opcion != 0);
     }
 
